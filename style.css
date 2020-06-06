@@ -1,0 +1,27 @@
+header {
+    padding-top: 13px;
+    text-align: center;
+    color: white;
+    background-color: #343a40;
+    height: 80px;
+}
+
+.btn {
+    background-color: #b19cd9;
+    color: white;
+    border: white 1px solid
+}
+
+.myCard {
+    font-size: 0.75rem;
+    color: white;
+    background-color:#b19cd9;
+    border: #343a40 2px solid;
+    border-radius: 25px;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
