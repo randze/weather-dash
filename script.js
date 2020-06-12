@@ -5,7 +5,7 @@ var weatherInfo
 var indexUV
 var fiveDay
 
-var fakeStorage = localStorage.fakeStorage ? JSON.parse(localStorage.fakeStorage) : []
+var searchSave = localStorage.searchSave ? JSON.parse(localStorage.searchSave) : []
 
 async function citySearch() {
     event.preventDefault()
@@ -41,21 +41,27 @@ async function citySearch() {
         console.log (fiveDay)
     })
 
-    localStorage.fakeStorage = JSON.stringify(fakeStorage)
-
     displayWeather()
 }
 
 function displayWeather() {
     document.querySelector('#generalWeather').innerHTML =
     `
-    <h2>${weatherInfo.name} [ ${date} ]</h2>
+    <h2>${weatherInfo.name} [ ${date} ]<img class="" src="http://openweathermap.org/img/wn/${weatherInfo.weather[0].icon}@2x.png"></h2>
     <p>Temperature: ${weatherInfo.main.temp}&deg;C</p>
     <p>Humidity: ${weatherInfo.main.humidity}%</p>
     <p>Wind Speed: ${weatherInfo.wind.speed} km/h</p>
-    <p>UV Index: ${indexUV[0].value}</p>
+    <p>UV Index: <span id="uvExposure">${indexUV[0].value}</span></p>
     `
+    uvCheck(indexUV[0].value)
 
+    searchSave.push(weatherInfo.name)
+    localStorage.searchSave = JSON.stringify(searchSave)
+    
+    // Clear old 5day search
+    document.querySelector('#fiveDay').innerHTML = ``
+
+    //  Index Entries for Noon Forcasts 3,11,19,27,35
     for (var i = 3 ; i < 40 ; i = i + 8) {
         var shortDate = fiveDay.list[i].dt_txt.slice(0,10)
         var celTemp = Math.round(Number(fiveDay.list[i].main.temp))-273.15
@@ -65,12 +71,21 @@ function displayWeather() {
         `
         <div class="col-12 col-sm-6 col-md-4 col-lg myCard">
             <p style="font-weight:bold;">${shortDate}</p>
-            <p>${fiveDay.list[i].weather[0].icon}</p>
-            <p>${celTempCalc}&deg;C</p>
-            <p>${fiveDay.list[i].main.humidity}%</p>
+            <img class="" src="http://openweathermap.org/img/wn/${fiveDay.list[i].weather[0].icon}.png">
+            <p>Temp: ${celTempCalc}&deg;C</p>
+            <p>Humidity:${fiveDay.list[i].main.humidity}%</p>
         </div>
         `
     }
 }
 
-//  3,11,19,27,35
+// favorable, moderate, or severe UVindex based on "https://www.canada.ca/en/environment-climate-change/services/weather-health/uv-index-sun-safety.html"
+function uvCheck(value) {
+    if (value >= 6) {
+        document.getElementById("uvExposure").style.background="red";
+    } else if (value > 2) {
+        document.getElementById("uvExposure").style.background="yellow";
+    } else {
+        document.getElementById("uvExposure").style.background="green";
+    }
+}
