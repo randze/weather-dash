@@ -12,6 +12,7 @@ A simple weather dash by me using localstorage, bootstrap, and OpenWeatherAPI.
 
 ## Acknowledgments
 [Bootstrap](https://getbootstrap.com/) for a more responsive page.
+
 [OpenWeather API](https://openweathermap.org/api) for their Weather Information
 
 ## Link to Weather Dash
