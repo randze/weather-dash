@@ -35,8 +35,14 @@ function genHistoryList() {
 async function citySearch(cityName) {
     // API KEY
     const APIkey = '24efea332a9cf0abcfd7b79b7c7be057'
-    let apiLink = `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=${APIkey}`
-    
+    var apiLink
+    // fix loading on github pages
+    if (location.protocol === 'http:') {
+        apiLink = `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=${APIkey}`
+    } else {
+        apiLink = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=${APIkey}`
+    }
+
     // Get Current Weather
     const weatherInfo = await fetch(apiLink).then(response => response.json())
 
