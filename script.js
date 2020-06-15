@@ -84,7 +84,7 @@ function displayWeather(weatherInfo, indexUV, fiveDay) {
 
     // Only want to Add to Search History if New
     let searchHistoryName = `${weatherInfo.name}, ${weatherInfo.sys.country}`
-    searchSave.indexOf(searchHistoryName) === -1 ? searchSave.push(searchHistoryName) : console.log("Already in Search History");
+    searchSave.indexOf(searchHistoryName) === -1 ? searchSave.push(searchHistoryName) : ``
 
     uvCheck(indexUV[0].value)
     
@@ -125,7 +125,7 @@ function uvCheck(value) {
     if (value >= 6) {
         document.getElementById("uvExposure").style.background="red";
     } else if (value > 2) {
-        document.getElementById("uvExposure").style.background="yellow";
+        document.getElementById("uvExposure").style.background="orange";
     } else {
         document.getElementById("uvExposure").style.background="green";
     }
@@ -143,8 +143,16 @@ const historySearch = document.querySelector('#searchHistory')
 historySearch.addEventListener('click', function(event) {
     event.preventDefault()
     if (event.target.tagName === 'TD') {
-        console.log(event)
+        // console.log(event)
         let goSearch = event.target.firstChild.textContent
         citySearch(goSearch)
     }
 }, false)
+
+document.querySelector('#cityBox').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        event.preventDefault()
+        const cityName = document.querySelector('#cityBox').value
+        citySearch(cityName)
+    }
+});
