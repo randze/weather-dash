@@ -1,15 +1,9 @@
 const today = new Date();
 let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 
-const APIkey = '24efea332a9cf0abcfd7b79b7c7be057'
-var weatherInfo
-var indexUV
-var fiveDay
-
 // localstorage variables
 var haveLastSearch = localStorage.searchSave ? true : false
 var searchSave = localStorage.searchSave ? JSON.parse(localStorage.searchSave) : []
-
 if (haveLastSearch) {
     genHistoryList()
 
@@ -23,7 +17,9 @@ if (haveLastSearch) {
     uvCheck(indexNum)
 }
 
+// Generate Search History List
 function genHistoryList() {
+    document.querySelector('#searchHistory').innerHTML = ""
     for (var idx = 0 ; idx < searchSave.length ; idx++) {
         document.querySelector('#searchHistory').innerHTML +=
         `
@@ -34,38 +30,29 @@ function genHistoryList() {
     }
 }
 
-async function citySearch() {
-    event.preventDefault()
-
-    let cityName = document.querySelector('#cityBox').value
+// Main Weather Search Function
+async function citySearch(cityName) {
+    // API KEY
+    const APIkey = '24efea332a9cf0abcfd7b79b7c7be057'
     let apiLink = `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=${APIkey}`
     
-    await fetch(apiLink)
-    .then(response => response.json())
-    .then(function(response){
-        weatherInfo = response
-        console.log (weatherInfo)
-    })
+    // Get Current Weather
+    const weatherInfo = await fetch(apiLink).then(response => response.json())
 
-    await fetch(`http://api.openweathermap.org/data/2.5/uvi/forecast?lat=${weatherInfo.coord.lat}&lon=${weatherInfo.coord.lon}&appid=${APIkey}`)
+    // Search for UVindex with longitude/latitude from first request
+    const indexUV = await fetch(`http://api.openweathermap.org/data/2.5/uvi/forecast?lat=${weatherInfo.coord.lat}&lon=${weatherInfo.coord.lon}&appid=${APIkey}`)
     .then(response => response.json())
-    .then(function(response){
-        indexUV = response
-        console.log (indexUV)
-    })
-
-    await fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${APIkey}`)
+    
+    // Five Day Forcast Info
+    const fiveDay = await fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${APIkey}`)
     .then(response => response.json())
-    .then(function(response){
-        fiveDay = response
-        console.log (fiveDay)
-    })
-
-    displayWeather()
+    
+    console.log (fiveDay)
+    displayWeather(weatherInfo, indexUV, fiveDay)
 }
 
 // Function to generate weather information found
-function displayWeather() {
+function displayWeather(weatherInfo, indexUV, fiveDay) {
     var weatherOne = document.querySelector('#generalWeather').innerHTML =
     `
     <h2>${weatherInfo.name} [ ${date} ]<img class="" src="http://openweathermap.org/img/wn/${weatherInfo.weather[0].icon}.png"></h2>
@@ -75,7 +62,9 @@ function displayWeather() {
     <p>UV Index: <span id="uvExposure">${indexUV[0].value}</span></p>
     `
 
-    searchSave.push(`${weatherInfo.name}, ${weatherInfo.sys.country}`)
+    // Only want to Add to Search History if New
+    let searchHistoryName = `${weatherInfo.name}, ${weatherInfo.sys.country}`
+    searchSave.indexOf(searchHistoryName) === -1 ? searchSave.push(searchHistoryName) : console.log("Already in Search History");
 
     uvCheck(indexUV[0].value)
     
@@ -125,5 +114,17 @@ function uvCheck(value) {
     }
 }
 
+function mainSearch() {
+    event.preventDefault()
+    const cityName = document.querySelector('#cityBox').value
+    citySearch(cityName)
+}
 
-
+const historySearch = document.querySelector('#searchHistory')
+historySearch.addEventListener('click', function(event) {
+    if (event.target.tagName === 'TD') {
+        console.log(event)
+        let goSearch = event.target.firstChild.textContent
+        citySearch(goSearch)
+    }
+}, false)
