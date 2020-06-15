@@ -75,7 +75,7 @@ async function citySearch(cityName) {
 function displayWeather(weatherInfo, indexUV, fiveDay) {
     var weatherOne = document.querySelector('#generalWeather').innerHTML =
     `
-    <h2>${weatherInfo.name} [ ${date} ]<img class="" src="openweathermap.org/img/wn/${weatherInfo.weather[0].icon}.png"></h2>
+    <h2>${weatherInfo.name} [ ${date} ]<img class="" src="http://openweathermap.org/img/wn/${weatherInfo.weather[0].icon}.png"></h2>
     <p>Temperature: ${weatherInfo.main.temp}&deg;C</p>
     <p>Humidity: ${weatherInfo.main.humidity}%</p>
     <p>Wind Speed: ${weatherInfo.wind.speed} km/h</p>
@@ -101,7 +101,7 @@ function displayWeather(weatherInfo, indexUV, fiveDay) {
         `
         <div class="col-12 col-sm-6 col-md-6 col-lg myCard">
             <p style="font-weight:bold;">${shortDate}</p>
-            <img class="" src="openweathermap.org/img/wn/${fiveDay.list[i].weather[0].icon}.png">
+            <img class="" src="http://openweathermap.org/img/wn/${fiveDay.list[i].weather[0].icon}.png">
             <p>Temp: ${celTempCalc}&deg;C</p>
             <p>Humidity: ${fiveDay.list[i].main.humidity}%</p>
         </div>
