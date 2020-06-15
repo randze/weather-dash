@@ -15,4 +15,4 @@ A simple weather dash by me using localstorage, bootstrap, and OpenWeatherAPI.
 [OpenWeather API](https://openweathermap.org/api) for their Weather Information
 
 ## Link to Weather Dash
-[Work-Day-Planner](https://randze.github.io/weather-dash/)
+[My-Weather-Dash](https://randze.github.io/weather-dash/)
