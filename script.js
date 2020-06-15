@@ -36,23 +36,35 @@ async function citySearch(cityName) {
     // API KEY
     const APIkey = '24efea332a9cf0abcfd7b79b7c7be057'
     var apiLink
+    var indexUVLink
+    var fiveDayLink
+
     // fix loading on github pages
     if (location.protocol === 'http:') {
         apiLink = `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=${APIkey}`
     } else {
         apiLink = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=${APIkey}`
     }
-
     // Get Current Weather
     const weatherInfo = await fetch(apiLink).then(response => response.json())
-
-    // Search for UVindex with longitude/latitude from first request
-    const indexUV = await fetch(`http://api.openweathermap.org/data/2.5/uvi/forecast?lat=${weatherInfo.coord.lat}&lon=${weatherInfo.coord.lon}&appid=${APIkey}`)
-    .then(response => response.json())
     
+    // fix loading on github pages
+    if (location.protocol === 'http:') {
+        indexUVLink = `http://api.openweathermap.org/data/2.5/uvi/forecast?lat=${weatherInfo.coord.lat}&lon=${weatherInfo.coord.lon}&appid=${APIkey}`
+    } else {
+        indexUVLink = `https://api.openweathermap.org/data/2.5/uvi/forecast?lat=${weatherInfo.coord.lat}&lon=${weatherInfo.coord.lon}&appid=${APIkey}`
+    }
+    // Search for UVindex with longitude/latitude from first request
+    const indexUV = await fetch(indexUVLink).then(response => response.json())
+    
+    // fix loading on github pages
+    if (location.protocol === 'http:') {
+        fiveDayLink = `http://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${APIkey}`
+    } else {
+        fiveDayLink = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${APIkey}`
+    }
     // Five Day Forcast Info
-    const fiveDay = await fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${APIkey}`)
-    .then(response => response.json())
+    const fiveDay = await fetch(fiveDayLink).then(response => response.json())
 
     // console.log (fiveDay)
 
