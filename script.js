@@ -1,3 +1,4 @@
+// Display Current Date
 const today = new Date();
 let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 
@@ -46,8 +47,9 @@ async function citySearch(cityName) {
     // Five Day Forcast Info
     const fiveDay = await fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${APIkey}`)
     .then(response => response.json())
-    
-    console.log (fiveDay)
+
+    // console.log (fiveDay)
+
     displayWeather(weatherInfo, indexUV, fiveDay)
 }
 
@@ -71,8 +73,8 @@ function displayWeather(weatherInfo, indexUV, fiveDay) {
     // Clear old 5day search
     document.querySelector('#fiveDay').innerHTML = ``
 
-    //  Index Entries for Noon Forcasts 3,11,19,27,35
-    for (var i = 3 ; i < 40 ; i = i + 8) {
+    //  Index Entries for Noon Forcasts ??
+    for (var i = 4 ; i < 40 ; i = i + 8) {
         var shortDate = fiveDay.list[i].dt_txt.slice(0,10)
         var celTemp = Math.round(Number(fiveDay.list[i].main.temp))-273.15
         var celTempCalc = celTemp.toFixed(2)
@@ -89,19 +91,16 @@ function displayWeather(weatherInfo, indexUV, fiveDay) {
     }
 
     localSave(weatherOne, weatherTwo)
-    
-    // Display search history
-    genHistoryList()
-    
+    genHistoryList()  
 }
 
+// Local Storage to Save Display Previous Search on Reload
 function localSave(saveOne, saveTwo) {
     haveLastSearch = true
     localStorage.searchSave = JSON.stringify(searchSave)
     localStorage.saveOne = JSON.stringify(saveOne)
     localStorage.saveTwo = JSON.stringify(saveTwo)
 }
-
 
 // favorable, moderate, or severe UVindex based on "https://www.canada.ca/en/environment-climate-change/services/weather-health/uv-index-sun-safety.html"
 function uvCheck(value) {
@@ -114,14 +113,17 @@ function uvCheck(value) {
     }
 }
 
+// Search Weather by City with Search Bar
 function mainSearch() {
     event.preventDefault()
     const cityName = document.querySelector('#cityBox').value
     citySearch(cityName)
 }
 
+// Search Weather on History List Click
 const historySearch = document.querySelector('#searchHistory')
 historySearch.addEventListener('click', function(event) {
+    event.preventDefault()
     if (event.target.tagName === 'TD') {
         console.log(event)
         let goSearch = event.target.firstChild.textContent
